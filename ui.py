@@ -1,0 +1,264 @@
+from graphviz import Digraph, Graph
+
+from PIL import Image, ImageTk
+
+import wx, os, tree as tr
+import pathlib
+import eel
+import main_algo as algo
+import load_tree as convert
+
+
+def change_key_values(bad_dict: dict) -> dict:
+    new_dict = {}
+    for key, value in bad_dict.items():
+        new_dict[value] = key
+    return new_dict
+
+
+# def paint_tree(map_family: dict):
+#     map_family = change_key_values(map_family)
+#     os.environ["PATH"] += os.pathsep + 'C:/Program Files/Graphviz/bin/'
+#     tree = Digraph('main', comment="Main Tree")
+#     ready_nodes = set()
+#     for key_id, family in map_family.items():
+#         if key_id in ready_nodes:
+#             continue
+#         fam = Digraph(key_id)
+#         if family.mother:
+#             fam.node(family.mother, r'{0} {1}'.format(family.mother, family.mother))
+#         if family.father:
+#             fam.node(family.father, r'{0} {1}'.format(family.father, family.father))
+#         if family.children:
+#             for child in family.children:
+#                 fam.node(child, r'{0} {1}'.format(child, child))
+#         if family.mother and family.father:
+#             fam.attr(rank='same')
+#             fam.node("marr", label='', fixedsize='false', width='0', height='0', shape='none')
+#             fam.edge(family.mother, "marr", arrowhead='none')
+#             fam.edge("marr", family.father, arrowhead='none')
+#             if family.children:
+#                 for child in family.children:
+#                     fam.edge("marr", child, arrowhead='none')
+#         else:
+#             if family.mother and family.children:
+#                 for child in family.children:
+#                     fam.edge(family.mother, child, arrowhead='none')
+#             if family.father and family.children:
+#                 for child in family.children:
+#                     fam.edge(family.father, child, arrowhead='none')
+#         tree.subgraph(fam)
+#     tree.render('test_Tree', view=True)
+#     pass
+
+
+def chit_print():
+    os.environ["PATH"] += os.pathsep + 'C:/Program Files/Graphviz/bin/'
+    tree = Digraph("main")
+    grand_parents = Digraph("grand")
+    parents = Digraph("parents")
+    me = Digraph('me')
+    uncle = Digraph("uncle")
+
+    uncle.node("Дядя", r'Литвиненко\nДенис', fillcolor="#fa9940", style='filled')
+
+    grand_parents.node("Бабушка", r'Литвиненко\nЛюдмила', fillcolor="#ff7e40", style='filled')
+    grand_parents.node("Дедушка", r'Литвиненко\nВасилий', fillcolor="#fa9940", style='filled')
+    grand_parents.node('FM', label='', fixedsize='false', width='0', height='0', shape='none')
+    tree.attr(rank='same')
+
+    tree.edge("Бабушка", "FM", arrowhead='none')
+    tree.edge("FM", "Дедушка", arrowhead='none')
+    tree.edge("FM", "Дядя", arrowhead='none')
+
+    parents.node("Мама", r'Литвиненко\nИрина', fillcolor="#ff7e40", style='filled')
+    parents.node("Папа", r'Симаненко\nАлександр', fillcolor="#fa9940", style='filled')
+    parents.node('FM2', label='', fixedsize='false', width='0', height='0', shape='none')
+    tree.attr(rank='same')
+
+    tree.edge("Мама", "FM2", arrowhead='none')
+    tree.edge("FM2", "Папа", arrowhead='none')
+    tree.edge("FM", "Мама", arrowhead='none')
+
+    me.node("Я", r'Симаненко\nЮлия', fillcolor="#ff7e40", style='filled')
+
+    tree.edge("FM2", "Я", arrowhead='none')
+
+    tree.subgraph(grand_parents)
+    tree.subgraph(uncle)
+    tree.subgraph(parents)
+    tree.subgraph(me)
+
+    tree.format = 'svg'
+    tree.render('left_tree_part', view=True)
+    os.remove('left_tree_part')
+
+
+def chit_print2():
+    os.environ["PATH"] += os.pathsep + 'C:/Program Files/Graphviz/bin/'
+    tree = Digraph("main")
+    grand_parents = Digraph("grand")
+    parents = Digraph("parents")
+    me = Digraph('me')
+    uncle = Digraph("uncle")
+
+    grand_parents.node("Бабушка", r'Шапкина\nЛюбовь', fillcolor="#ff7e40", style='filled')
+    grand_parents.node("Дедушка", r'Симаненко\nВиталий', fillcolor="#fa9940", style='filled')
+    grand_parents.node('FM', label='', fixedsize='false', width='0', height='0', shape='none')
+    tree.attr(rank='same')
+
+    tree.edge("Бабушка", "FM", arrowhead='none')
+    tree.edge("FM", "Дедушка", arrowhead='none')
+
+    parents.node("Мама", r'Литвиненко\nИрина', fillcolor="#ff7e40", style='filled')
+    parents.node("Папа", r'Симаненко\nАлександр', fillcolor="#fa9940", style='filled')
+    parents.node('FM2', label='', fixedsize='false', width='0', height='0', shape='none')
+    tree.attr(rank='same')
+
+    tree.edge("Мама", "FM2", arrowhead='none')
+    tree.edge("FM2", "Папа", arrowhead='none')
+    tree.edge("FM", "Папа", arrowhead='none')
+
+    me.node("Я", r'Симаненко\nЮлия', fillcolor="#ff7e40", style='filled')
+
+    tree.edge("FM2", "Я", arrowhead='none')
+
+    tree.subgraph(grand_parents)
+    tree.subgraph(uncle)
+    tree.subgraph(parents)
+    tree.subgraph(me)
+
+    tree.format = 'svg'
+    tree.render('right_tree_part', view=True)
+    os.remove('right_tree_part')
+
+
+def union_tree():
+    os.environ["PATH"] += os.pathsep + 'C:/Program Files/Graphviz/bin/'
+    tree = Digraph("main")
+    grand_parents1 = Digraph("grand1")
+    grand_parents = Digraph("grand")
+    parents = Digraph("parents")
+    me = Digraph('me')
+    uncle = Digraph("uncle")
+
+    uncle.node("Дядя", r'Литвиненко\nДенис', fillcolor="#fa9940", style='filled')
+
+    grand_parents.node("Бабушка", r'Литвиненко\nЛюдмила', fillcolor="#ff7e40", style='filled')
+    grand_parents.node("Дедушка", r'Литвиненко\nВасилий', fillcolor="#fa9940", style='filled')
+    grand_parents.node('FM', label='', fixedsize='false', width='0', height='0', shape='none')
+    tree.attr(rank='same')
+
+    grand_parents1.node("Бабушка1", r'Шапкина\nЛюбовь', fillcolor="#ff7e40", style='filled')
+    grand_parents1.node("Дедушка1", r'Симаненко\nВиталий', fillcolor="#fa9940", style='filled')
+    grand_parents1.node('FM1', label='', fixedsize='false', width='0', height='0', shape='none')
+
+    tree.edge("Бабушка1", "FM1", arrowhead='none')
+    tree.edge("FM1", "Дедушка1", arrowhead='none')
+
+    tree.edge("Бабушка", "FM", arrowhead='none')
+    tree.edge("FM", "Дедушка", arrowhead='none')
+    tree.edge("FM", "Дядя", arrowhead='none')
+
+    parents.node("Мама", r'Литвиненко\nИрина', fillcolor="#ff7e40", style='filled')
+    parents.node("Папа", r'Симаненко\nАлександр', fillcolor="#fa9940", style='filled')
+    parents.node('FM2', label='', fixedsize='false', width='0', height='0', shape='none')
+    tree.attr(rank='same')
+
+    tree.edge("Папа", "FM2", arrowhead='none')
+    tree.edge("FM2", "Мама", arrowhead='none')
+
+    tree.edge("FM", "Мама", arrowhead='none')
+    tree.edge("FM1", "Папа", arrowhead='none')
+
+    me.node("Я", r'Симаненко\nЮлия', fillcolor="#ff7e40", style='filled')
+
+    tree.edge("FM2", "Я", arrowhead='none')
+
+    tree.subgraph(grand_parents)
+    tree.subgraph(uncle)
+    tree.subgraph(parents)
+    tree.subgraph(me)
+    tree.subgraph(grand_parents1)
+
+    tree.format = 'svg'
+    tree.render('union_tree_part', view=True)
+    os.remove('union_tree_part')
+
+
+if __name__ == '__main__':
+    union_tree()
+
+# os.environ["PATH"] += os.pathsep + 'C:/Program Files/Graphviz/bin/'
+#
+# # parent = Digraph('parent')
+# dot = Digraph('child', comment='The Round Table')
+#
+# sub = Digraph('super_child')
+#
+# dot.node('A', 'King Arthur', color="#ff7e40", fillcolor="#ff7e40", style='filled')
+# dot.attr(rank='same')
+# # dot.attr(bgcolor="#ff7e40") full BG of graph
+# sub.node('B', 'Sir Bedevere the Wise')
+#
+# sub.node('L', 'Sir Lancelot the Brave')
+#
+# sub.node('BL', label='', fixedsize='false', width='0', height='0', shape='none')
+#
+# dot.edge('B', 'BL', arrowhead='none')
+# dot.edge('BL', 'L', arrowhead='none')
+# dot.edge('A', 'BL')
+#
+# dot.edges(['AB', 'AL'])
+#
+# dot.subgraph(sub)
+# # dot.edge('B', 'L', constraint='false', color="#ff7e40")
+#
+# # print(dot.source)
+# # dot.format = 'svg'
+# dot.render('test_Tree', view=True)
+# os.remove('test_Tree')
+# # result = dot.pipe(format='png')
+# # with open("test_tree.png", "ab") as file:
+# #     file.write(result)
+# # print(result)
+
+
+"""
+WINDOW
+"""
+
+eel.init("web")
+
+
+@eel.expose
+def union_tree(path1, path2):
+    tree_map1 = convert.load_persons_as_map(path1)
+    tree_map2 = convert.load_persons_as_map(path2)
+    union = algo.tree_union(tree_map1, tree_map2)
+    print(union)
+
+
+@eel.expose
+def pythonFunction(wildcard="*"):
+    app = wx.App(None)
+    style = wx.FD_OPEN | wx.FD_FILE_MUST_EXIST
+    dialog = wx.FileDialog(None, 'Open', wildcard=wildcard, style=style)
+    if dialog.ShowModal() == wx.ID_OK:
+        path = dialog.GetPath()
+    else:
+        path = None
+    dialog.Destroy()
+    print(path)
+
+    return path if test_open_files(path) else False
+
+
+def test_open_files(file_path) -> bool:
+    if pathlib.Path(file_path).suffix in ('.ged', '.GED'):
+        return True
+    else:
+        print("Not GED file")
+        return False
+
+# eel.start("index.html", size=(900, 700))
