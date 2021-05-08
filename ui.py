@@ -228,7 +228,7 @@ if __name__ == '__main__':
 WINDOW
 """
 
-eel.init("web")
+# eel.init("web")
 
 
 @eel.expose
