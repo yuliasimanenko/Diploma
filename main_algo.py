@@ -108,7 +108,7 @@ def find_person(person: tr.Tree, map_tree: dict):
 def tree_union(map_tree1: dict, map_tree2: dict):
     compatibility, union = tree_analysis(map_tree1, map_tree2)
     if not union or compatibility < 10 or compatibility > 95:
-        return None
+        return compatibility
     id_key = 0
     ready_nodes = set()
     for key2, person2 in map_tree2.items():

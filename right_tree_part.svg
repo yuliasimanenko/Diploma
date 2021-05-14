@@ -30,7 +30,7 @@
 <title>Дедушка</title>
 <ellipse fill="#fa9940" stroke="black" cx="299.93" cy="-206.35" rx="59.29" ry="26.74"/>
 <text text-anchor="middle" x="299.93" y="-210.15" font-family="Times New Roman,serif" font-size="14.00">Симаненко</text>
-<text text-anchor="middle" x="299.93" y="-195.15" font-family="Times New Roman,serif" font-size="14.00">Виталий</text>
+<text text-anchor="middle" x="299.93" y="-195.15" font-family="Times New Roman,serif" font-size="14.00">Владимир</text>
 </g>
 <!-- FM&#45;&gt;Дедушка -->
 <g id="edge2" class="edge">

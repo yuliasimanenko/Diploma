@@ -130,12 +130,16 @@ if __name__ == '__main__':
     # for key, person1 in tree_map1.items():
     #     print(person1.first_name)
     # print('\n')
-    for key, person2 in tree_map2.items():
-        print(person2.mother, end='    ')
-    print('\n')
+    # for key, person2 in tree_map2.items():
+    #     print(person2.mother, end='    ')
+    # print('\n')
+
 
     map_name = convert_persons_for_write_to_file(tree_map2)
+
     # map_result = algo.tree_union(tree_map1, tree_map2)
+    # print(map_result)
+
     wr.save_to_file(map_name)
 
     # for key, person123 in map_result.items():
